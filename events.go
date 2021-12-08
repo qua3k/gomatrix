@@ -7,16 +7,24 @@ import (
 
 // Event represents a single Matrix event.
 type Event struct {
-	StateKey    *string                `json:"state_key,omitempty"`    // The state key for the event. Only present on State Events.
-	Sender      string                 `json:"sender"`                 // The user ID of the sender of the event
-	Type        string                 `json:"type"`                   // The event type
-	Timestamp   int64                  `json:"origin_server_ts"`       // The unix timestamp when this message was sent by the origin server
-	ID          string                 `json:"event_id"`               // The unique ID of this event
-	RoomID      string                 `json:"room_id"`                // The room the event was sent to. May be nil (e.g. for presence)
-	Redacts     string                 `json:"redacts,omitempty"`      // The event ID that was redacted if a m.room.redaction event
-	Unsigned    map[string]interface{} `json:"unsigned"`               // The unsigned portions of the event, such as age and prev_content
-	Content     map[string]interface{} `json:"content"`                // The JSON content of the event.
+
+	// The basic set of fields all events must have.
+	Content map[string]interface{} `json:"content"` // The JSON content of the event.
+	Type    string                 `json:"type"`    // The event type
+
+	// Room Events have the following fields
+	ID        string                 `json:"event_id"`         // The unique ID of this event
+	RoomID    string                 `json:"room_id"`          // The room the event was sent to. May be nil (e.g. for presence)
+	Sender    string                 `json:"sender"`           // The user ID of the sender of the event
+	Timestamp int64                  `json:"origin_server_ts"` // The unix timestamp when this message was sent by the origin server
+	Unsigned  map[string]interface{} `json:"unsigned"`         // The unsigned portions of the event, such as age and prev_content
+
+	// In addition to the fields of a Room Event, State Events have the following fields.
 	PrevContent map[string]interface{} `json:"prev_content,omitempty"` // The JSON prev_content of the event.
+	StateKey    *string                `json:"state_key,omitempty"`    // The state key for the event. Only present on State Events.
+
+	// Strictly for m.room.redaction events
+	Redacts string `json:"redacts,omitempty"` // The event ID that was redacted if a m.room.redaction event
 }
 
 // Body returns the value of the "body" key in the event content if it is
