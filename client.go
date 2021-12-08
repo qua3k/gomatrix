@@ -21,7 +21,7 @@ import (
 // Client represents a Matrix client.
 type Client struct {
 	HomeserverURL *url.URL     // The base homeserver URL
-	Prefix        string       // The API prefix eg '/_matrix/client/r0'
+	Prefix        string       // The API prefix eg '/_matrix/client/v3'
 	UserID        string       // The user ID of the client. Used for forming HTTP paths which use the client's user ID.
 	AccessToken   string       // The access_token for the client.
 	Client        *http.Client // The underlying HTTP client which will be used to make HTTP requests.
@@ -794,7 +794,7 @@ func NewClient(homeserverURL, userID, accessToken string) (*Client, error) {
 		AccessToken:   accessToken,
 		HomeserverURL: hsURL,
 		UserID:        userID,
-		Prefix:        "/_matrix/client/r0",
+		Prefix:        "/_matrix/client/v3",
 		Syncer:        NewDefaultSyncer(userID, store),
 		Store:         store,
 	}
