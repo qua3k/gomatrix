@@ -17,7 +17,7 @@ package gomatrix
 import "errors"
 
 // Filter is used by clients to specify how the server should filter responses to e.g. sync requests
-// Specified by: https://matrix.org/docs/spec/client_server/r0.2.0.html#filtering
+// Specified by: https://spec.matrix.org/v1.1/client-server-api/#post_matrixclientv3useruseridfilter
 type Filter struct {
 	AccountData FilterPart `json:"account_data,omitempty"`
 	EventFields []string   `json:"event_fields,omitempty"`
@@ -39,14 +39,17 @@ type RoomFilter struct {
 
 // FilterPart is used to define filtering rules for specific categories of events
 type FilterPart struct {
-	NotRooms    []string `json:"not_rooms,omitempty"`
-	Rooms       []string `json:"rooms,omitempty"`
-	Limit       int      `json:"limit,omitempty"`
-	NotSenders  []string `json:"not_senders,omitempty"`
-	NotTypes    []string `json:"not_types,omitempty"`
-	Senders     []string `json:"senders,omitempty"`
-	Types       []string `json:"types,omitempty"`
-	ContainsURL *bool    `json:"contains_url,omitempty"`
+	Limit      int      `json:"limit,omitempty"`
+	NotSenders []string `json:"not_senders,omitempty"`
+	NotTypes   []string `json:"not_types,omitempty"`
+	Senders    []string `json:"senders,omitempty"`
+	Types      []string `json:"types,omitempty"`
+
+	ContainsURL             *bool    `json:"contains_url,omitempty"`
+	IncludeRedundantMembers bool     `json:"include_redundant_members,omitempty"`
+	LazyLoadMembers         bool     `json:"lazy_load_members,omitempty"`
+	NotRooms                []string `json:"not_rooms,omitempty"`
+	Rooms                   []string `json:"rooms,omitempty"`
 }
 
 // Validate checks if the filter contains valid property values
@@ -79,11 +82,11 @@ func DefaultFilter() Filter {
 // DefaultFilterPart returns the default filter part used by the Matrix server if no filter is provided in the request
 func DefaultFilterPart() FilterPart {
 	return FilterPart{
-		NotRooms:   nil,
-		Rooms:      nil,
 		Limit:      20,
+		NotRooms:   nil,
 		NotSenders: nil,
 		NotTypes:   nil,
+		Rooms:      nil,
 		Senders:    nil,
 		Types:      nil,
 	}
