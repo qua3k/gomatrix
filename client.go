@@ -750,8 +750,8 @@ func (cli *Client) JoinedRooms() (resp *RespJoinedRooms, err error) {
 
 // Messages returns a list of message and state events for a room. It uses
 // pagination query parameters to paginate history in the room.
-// See https://matrix.org/docs/spec/client_server/r0.2.0.html#get-matrix-client-r0-rooms-roomid-messages
-func (cli *Client) Messages(roomID, from, to string, dir rune, limit int) (resp *RespMessages, err error) {
+// See https://spec.matrix.org/v1.1/client-server-api/#get_matrixclientv3roomsroomidmessages
+func (cli *Client) Messages(roomID string, dir rune, filter, from string, limit int, to string) (resp *RespMessages, err error) {
 	query := map[string]string{
 		"from": from,
 		"dir":  string(dir),
@@ -761,6 +761,10 @@ func (cli *Client) Messages(roomID, from, to string, dir rune, limit int) (resp 
 	}
 	if limit != 0 {
 		query["limit"] = strconv.Itoa(limit)
+	}
+
+	if filter != "" {
+		query["filter"] = filter
 	}
 
 	urlPath := cli.BuildURLWithQuery([]string{"rooms", roomID, "messages"}, query)
