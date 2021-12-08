@@ -248,7 +248,7 @@ func (cli *Client) MakeRequest(method string, httpURL string, reqBody interface{
 	return nil
 }
 
-// CreateFilter makes an HTTP request according to http://matrix.org/docs/spec/client_server/r0.2.0.html#post-matrix-client-r0-user-userid-filter
+// CreateFilter makes an HTTP request according to https://spec.matrix.org/v1.1/client-server-api/#post_matrixclientv3useruseridfilter
 func (cli *Client) CreateFilter(filter json.RawMessage) (resp *RespCreateFilter, err error) {
 	urlPath := cli.BuildURL("user", cli.UserID, "filter")
 	err = cli.MakeRequest("POST", urlPath, &filter, &resp)

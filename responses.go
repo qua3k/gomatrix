@@ -12,7 +12,7 @@ func (e RespError) Error() string {
 	return e.ErrCode + ": " + e.Err
 }
 
-// RespCreateFilter is the JSON response for http://matrix.org/docs/spec/client_server/r0.2.0.html#post-matrix-client-r0-user-userid-filter
+// RespCreateFilter is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#post_matrixclientv3useruseridfilter
 type RespCreateFilter struct {
 	FilterID string `json:"filter_id"`
 }
