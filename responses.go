@@ -17,22 +17,34 @@ type RespCreateFilter struct {
 	FilterID string `json:"filter_id"`
 }
 
-// RespVersions is the JSON response for http://matrix.org/docs/spec/client_server/r0.2.0.html#get-matrix-client-versions
-type RespVersions struct {
-	Versions []string `json:"versions"`
-}
-
-// RespPublicRooms is the JSON response for http://matrix.org/speculator/spec/HEAD/client_server/unstable.html#get-matrix-client-unstable-publicrooms
+// RespPublicRooms is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#get_matrixclientv3directorylistroomroomid
 type RespPublicRooms struct {
-	TotalRoomCountEstimate int          `json:"total_room_count_estimate"`
-	PrevBatch              string       `json:"prev_batch"`
-	NextBatch              string       `json:"next_batch"`
 	Chunk                  []PublicRoom `json:"chunk"`
+	NextBatch              string       `json:"next_batch,omitempty"`
+	PrevBatch              string       `json:"prev_batch,omitempty"`
+	TotalRoomCountEstimate int          `json:"total_room_count_estimate,omitempty"`
 }
 
-// RespJoinRoom is the JSON response for http://matrix.org/docs/spec/client_server/r0.2.0.html#post-matrix-client-r0-rooms-roomid-join
+// RespJoinRoom is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#post_matrixclientv3roomsroomidjoin
 type RespJoinRoom struct {
 	RoomID string `json:"room_id"`
+}
+
+// RespResolveRoomAlias is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#get_matrixclientv3directoryroomroomalias
+type RespResolveRoomAlias struct {
+	RoomID  string   `json:"room_id"`
+	Servers []string `json:"servers"`
+}
+
+// RespSetRoomAlias is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#put_matrixclientv3directoryroomroomalias
+type RespSetRoomAlias struct{}
+
+// RespDeleteRoomAlias is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#delete_matrixclientv3directoryroomroomalias
+type RespDeleteRoomAlias struct{}
+
+// RespGetRoomAliases is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#get_matrixclientv3roomsroomidaliases
+type RespGetRoomAliases struct {
+	Aliases []string `json:"aliases"`
 }
 
 // RespLeaveRoom is the JSON response for http://matrix.org/docs/spec/client_server/r0.2.0.html#post-matrix-client-r0-rooms-roomid-leave
@@ -41,17 +53,35 @@ type RespLeaveRoom struct{}
 // RespForgetRoom is the JSON response for http://matrix.org/docs/spec/client_server/r0.2.0.html#post-matrix-client-r0-rooms-roomid-forget
 type RespForgetRoom struct{}
 
-// RespInviteUser is the JSON response for http://matrix.org/docs/spec/client_server/r0.2.0.html#post-matrix-client-r0-rooms-roomid-invite
+// RespServerCapabilities is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#get_matrixclientv3capabilities
+type RespServerCapabilities struct {
+	Capabilities map[string]interface{} `json:"capabilities"`
+}
+
+// RespInviteUser is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#post_matrixclientv3roomsroomidinvite
 type RespInviteUser struct{}
 
-// RespKickUser is the JSON response for http://matrix.org/docs/spec/client_server/r0.2.0.html#post-matrix-client-r0-rooms-roomid-kick
+// RespKnockRoom is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#post_matrixclientv3knockroomidoralias
+type RespKnockRoom struct {
+	RoomID string `json:"room_id"`
+}
+
+// RespKickUser is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#post_matrixclientv3roomsroomidkick
 type RespKickUser struct{}
 
-// RespBanUser is the JSON response for http://matrix.org/docs/spec/client_server/r0.2.0.html#post-matrix-client-r0-rooms-roomid-ban
+// RespBanUser is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#post_matrixclientv3roomsroomidban
 type RespBanUser struct{}
 
-// RespUnbanUser is the JSON response for http://matrix.org/docs/spec/client_server/r0.2.0.html#post-matrix-client-r0-rooms-roomid-unban
+// RespUnbanUser is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#post_matrixclientv3roomsroomidunban
 type RespUnbanUser struct{}
+
+// RespGetRoomDir is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#get_matrixclientv3directorylistroomroomid
+type RespGetRoomDir struct {
+	Visibility string `json:"visibility"`
+}
+
+// RespSetRoomDir is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#put_matrixclientv3directorylistroomroomid
+type RespSetRoomDir struct{}
 
 // RespTyping is the JSON response for https://matrix.org/docs/spec/client_server/r0.2.0.html#put-matrix-client-r0-rooms-roomid-typing-userid
 type RespTyping struct{}
@@ -61,11 +91,11 @@ type RespJoinedRooms struct {
 	JoinedRooms []string `json:"joined_rooms"`
 }
 
-// RespJoinedMembers is the JSON response for TODO-SPEC https://github.com/matrix-org/synapse/pull/1680
+// RespJoinedMembers is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#get_matrixclientv3roomsroomidjoined_members
 type RespJoinedMembers struct {
 	Joined map[string]struct {
-		DisplayName *string `json:"display_name"`
-		AvatarURL   *string `json:"avatar_url"`
+		AvatarURL   string `json:"avatar_url,omitempty"`
+		DisplayName string `json:"display_name,omitempty"`
 	} `json:"joined"`
 }
 
@@ -77,7 +107,7 @@ type RespMessages struct {
 	State []Event `json:"state"`
 }
 
-// RespSendEvent is the JSON response for http://matrix.org/docs/spec/client_server/r0.2.0.html#put-matrix-client-r0-rooms-roomid-send-eventtype-txnid
+// RespSendEvent is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#put_matrixclientv3roomsroomidsendeventtypetxnid
 type RespSendEvent struct {
 	EventID string `json:"event_id"`
 }
@@ -161,51 +191,88 @@ type RespCreateRoom struct {
 	RoomID string `json:"room_id"`
 }
 
-// RespSync is the JSON response for http://matrix.org/docs/spec/client_server/r0.2.0.html#get-matrix-client-r0-sync
-type RespSync struct {
-	NextBatch   string `json:"next_batch"`
+// The timeline object
+type Timeline struct {
+	Events    []Event `json:"events"`
+	Limited   bool    `json:"limited"`
+	PrevBatch string  `json:"prev_batch,omitempty"`
+}
+
+// The join object
+type Join struct {
 	AccountData struct {
 		Events []Event `json:"events"`
 	} `json:"account_data"`
-	Presence struct {
+	Ephemeral struct {
+		Events []Event `json:"events"`
+	} `json:"ephemeral"`
+	State struct {
+		Events []Event `json:"events"`
+	} `json:"state"`
+	Summary struct {
+		Heros              []string `json:"m.heros,omitempty"`
+		InvitedMemberCount int      `json:"m.invited_member_count,omitempty"`
+		JoinedMemberCount  int      `json:"m.joined_member_count,omitempty"`
+	} `json:"summary"`
+	Timeline            Timeline `json:"timeline"`
+	UnreadNotifications struct {
+		HighLightCount    int `json:"highlight_count"`
+		NotificationCount int `json:"notification_count"`
+	} `json:"unread_notifications"`
+}
+
+// RespSync is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#get_matrixclientv3sync
+type RespSync struct {
+	AccountData struct {
+		Events []Event `json:"events"`
+	} `json:"account_data"`
+	NextBatch string `json:"next_batch"`
+	Presence  struct {
 		Events []Event `json:"events"`
 	} `json:"presence"`
 	Rooms struct {
-		Leave map[string]struct {
-			State struct {
-				Events []Event `json:"events"`
-			} `json:"state"`
-			Timeline struct {
-				Events    []Event `json:"events"`
-				Limited   bool    `json:"limited"`
-				PrevBatch string  `json:"prev_batch"`
-			} `json:"timeline"`
-		} `json:"leave"`
-		Join map[string]struct {
-			State struct {
-				Events []Event `json:"events"`
-			} `json:"state"`
-			Timeline struct {
-				Events    []Event `json:"events"`
-				Limited   bool    `json:"limited"`
-				PrevBatch string  `json:"prev_batch"`
-			} `json:"timeline"`
-			Ephemeral struct {
-				Events []Event `json:"events"`
-			} `json:"ephemeral"`
-		} `json:"join"`
 		Invite map[string]struct {
 			State struct {
-				Events []Event
+				Events []Event `json:"events"`
 			} `json:"invite_state"`
 		} `json:"invite"`
+		Join  map[string]Join `json:"join"`
+		Knock map[string]struct {
+			State struct {
+				Events []Event `json:"events"`
+			} `json:"knock_state"`
+		}
+		Leave map[string]struct {
+			AccountData struct {
+				Events []Event `json:"events"`
+			} `json:"account_data"`
+			State struct {
+				Events []Event `json:"events"`
+			} `json:"state"`
+			Timeline Timeline `json:"timeline"`
+		} `json:"leave"`
 	} `json:"rooms"`
+	ToDevice struct {
+		Events []Event `json:"events"`
+	} `json:"to_device"`
 }
 
-// RespTurnServer is the JSON response from a Turn Server
-type RespTurnServer struct {
-	Username string   `json:"username"`
-	Password string   `json:"password"`
-	TTL      int      `json:"ttl"`
-	URIs     []string `json:"uris"`
+type RespGetMembers struct {
+	Chunk []Event `json:"chunk"`
 }
+
+type RespSearchUsers struct {
+	Limited bool `json:"limited"`
+	Results []struct {
+		AvatarURL   string `json:"avatar_url,omitempty"`
+		DisplayName string `json:"display_name,omitempty"`
+		UserId      string `json:"user_id"`
+	} `json:"results"`
+}
+
+type RespGetProfile struct {
+	AvatarURL   string `json:"avatar_url,omitempty"`
+	DisplayName string `json:"display_name,omitempty"`
+}
+
+type RespSetProfile struct{}

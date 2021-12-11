@@ -8,15 +8,16 @@ type Room struct {
 
 // PublicRoom represents the information about a public room obtainable from the room directory
 type PublicRoom struct {
-	CanonicalAlias   string   `json:"canonical_alias"`
-	Name             string   `json:"name"`
-	WorldReadable    bool     `json:"world_readable"`
-	Topic            string   `json:"topic"`
-	NumJoinedMembers int      `json:"num_joined_members"`
-	AvatarURL        string   `json:"avatar_url"`
-	RoomID           string   `json:"room_id"`
+	Aliases          []string `json:"aliases,omitempty"`
+	AvatarURL        string   `json:"avatar_url,omitempty"`
+	CanonicalAlias   string   `json:"canonical_alias,omitempty"`
 	GuestCanJoin     bool     `json:"guest_can_join"`
-	Aliases          []string `json:"aliases"`
+	JoinRule         string   `json:"join_rule,omitempty"`
+	Name             string   `json:"name,omitempty"`
+	NumJoinedMembers int      `json:"num_joined_members"`
+	RoomID           string   `json:"room_id"`
+	Topic            string   `json:"topic,omitempty"`
+	WorldReadable    bool     `json:"world_readable"`
 }
 
 // UpdateState updates the room's current state with the given Event. This will clobber events based
