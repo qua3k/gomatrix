@@ -10,17 +10,14 @@ type ReqRegister struct {
 	Auth                     interface{} `json:"auth,omitempty"`
 }
 
-// ReqLogin is the JSON request for http://matrix.org/docs/spec/client_server/r0.6.0.html#post-matrix-client-r0-login
+// ReqLogin is the JSON request for https://spec.matrix.org/v1.1/client-server-api/#post_matrixclientv3login
 type ReqLogin struct {
-	Type                     string     `json:"type"`
-	Identifier               Identifier `json:"identifier,omitempty"`
-	Password                 string     `json:"password,omitempty"`
-	Medium                   string     `json:"medium,omitempty"`
-	User                     string     `json:"user,omitempty"`
-	Address                  string     `json:"address,omitempty"`
-	Token                    string     `json:"token,omitempty"`
 	DeviceID                 string     `json:"device_id,omitempty"`
+	Identifier               Identifier `json:"identifier,omitempty"`
 	InitialDeviceDisplayName string     `json:"initial_device_display_name,omitempty"`
+	Password                 string     `json:"password,omitempty"`
+	Token                    string     `json:"token,omitempty"`
+	Type                     string     `json:"type"`
 }
 
 // ReqCreateRoom is the JSON request for https://spec.matrix.org/v1.1/client-server-api/#post_matrixclientv3createroom

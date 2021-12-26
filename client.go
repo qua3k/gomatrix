@@ -613,7 +613,7 @@ func (cli *Client) Register(req *ReqRegister) (*RespRegister, *RespUserInteracti
 	return cli.register(u, req)
 }
 
-// Login a user to the homeserver according to http://matrix.org/docs/spec/client_server/r0.2.0.html#post-matrix-client-r0-login
+// Login a user to the homeserver according to https://spec.matrix.org/v1.1/client-server-api/#post_matrixclientv3login
 // This does not set credentials on this client instance. See SetCredentials() instead.
 func (cli *Client) Login(req *ReqLogin) (resp *RespLogin, err error) {
 	urlPath := cli.BuildURL("login")

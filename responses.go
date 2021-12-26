@@ -161,16 +161,15 @@ type RespRegister struct {
 	UserID       string `json:"user_id"`
 }
 
-// RespLogin is the JSON response for http://matrix.org/docs/spec/client_server/r0.6.0.html#post-matrix-client-r0-login
+// RespLogin is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#post_matrixclientv3login
 type RespLogin struct {
 	AccessToken string               `json:"access_token"`
 	DeviceID    string               `json:"device_id"`
-	HomeServer  string               `json:"home_server"`
 	UserID      string               `json:"user_id"`
 	WellKnown   DiscoveryInformation `json:"well_known"`
 }
 
-// DiscoveryInformation is the JSON Response for https://matrix.org/docs/spec/client_server/r0.6.0#get-well-known-matrix-client and a part of the JSON Response for https://matrix.org/docs/spec/client_server/r0.6.0#post-matrix-client-r0-login
+// DiscoveryInformation is the JSON Response for https://spec.matrix.org/latest/client-server-api/#getwell-knownmatrixclient and a part of the JSON Response for https://spec.matrix.org/v1.1/client-server-api/#post_matrixclientv3login
 type DiscoveryInformation struct {
 	Homeserver struct {
 		BaseURL string `json:"base_url"`
