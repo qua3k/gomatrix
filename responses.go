@@ -36,17 +36,6 @@ type RespResolveRoomAlias struct {
 	Servers []string `json:"servers"`
 }
 
-// RespSetRoomAlias is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#put_matrixclientv3directoryroomroomalias
-type RespSetRoomAlias struct{}
-
-// RespDeleteRoomAlias is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#delete_matrixclientv3directoryroomroomalias
-type RespDeleteRoomAlias struct{}
-
-// RespGetRoomAliases is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#get_matrixclientv3roomsroomidaliases
-type RespGetRoomAliases struct {
-	Aliases []string `json:"aliases"`
-}
-
 // RespLeaveRoom is the JSON response for http://matrix.org/docs/spec/client_server/r0.2.0.html#post-matrix-client-r0-rooms-roomid-leave
 type RespLeaveRoom struct{}
 
@@ -82,9 +71,6 @@ type RespGetRoomDir struct {
 
 // RespSetRoomDir is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#put_matrixclientv3directorylistroomroomid
 type RespSetRoomDir struct{}
-
-// RespTyping is the JSON response for https://matrix.org/docs/spec/client_server/r0.2.0.html#put-matrix-client-r0-rooms-roomid-typing-userid
-type RespTyping struct{}
 
 // RespJoinedRooms is the JSON response for TODO-SPEC https://github.com/matrix-org/synapse/pull/1680
 type RespJoinedRooms struct {
@@ -139,19 +125,6 @@ func (r RespUserInteractive) HasSingleStageFlow(stageName string) bool {
 	return false
 }
 
-// RespUserDisplayName is the JSON response for https://matrix.org/docs/spec/client_server/r0.2.0.html#get-matrix-client-r0-profile-userid-displayname
-type RespUserDisplayName struct {
-	DisplayName string `json:"displayname"`
-}
-
-// RespUserStatus is the JSON response for https://matrix.org/docs/spec/client_server/r0.6.0#get-matrix-client-r0-presence-userid-status
-type RespUserStatus struct {
-	Presence        string `json:"presence"`
-	StatusMsg       string `json:"status_msg"`
-	LastActiveAgo   int    `json:"last_active_ago"`
-	CurrentlyActive bool   `json:"currently_active"`
-}
-
 // RespRegister is the JSON response for http://matrix.org/docs/spec/client_server/r0.2.0.html#post-matrix-client-r0-register
 type RespRegister struct {
 	AccessToken  string `json:"access_token"`
@@ -178,12 +151,6 @@ type DiscoveryInformation struct {
 		BaseURL string `json:"base_url"`
 	} `json:"m.identitiy_server"`
 }
-
-// RespLogout is the JSON response for http://matrix.org/docs/spec/client_server/r0.6.0.html#post-matrix-client-r0-logout
-type RespLogout struct{}
-
-// RespLogoutAll is the JSON response for https://matrix.org/docs/spec/client_server/r0.6.0#post-matrix-client-r0-logout-all
-type RespLogoutAll struct{}
 
 // RespCreateRoom is the JSON response for https://matrix.org/docs/spec/client_server/r0.2.0.html#post-matrix-client-r0-createroom
 type RespCreateRoom struct {
@@ -256,10 +223,6 @@ type RespSync struct {
 	} `json:"to_device"`
 }
 
-type RespGetMembers struct {
-	Chunk []Event `json:"chunk"`
-}
-
 type RespSearchUsers struct {
 	Limited bool `json:"limited"`
 	Results []struct {
@@ -269,9 +232,17 @@ type RespSearchUsers struct {
 	} `json:"results"`
 }
 
-type RespGetProfile struct {
-	AvatarURL   string `json:"avatar_url,omitempty"`
-	DisplayName string `json:"display_name,omitempty"`
+// RespPowerLevels is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#mroompower_levels
+type RespPowerLevels struct {
+	Ban           int            `json:"ban,omitempty"`
+	Events        map[string]int `json:"events"`
+	EventsDefault int            `json:"events_default,omitempty"`
+	Invite        int            `json:"invite,omitempty"`
+	Kick          int            `json:"kick,omitempty"`
+	Notifications map[string]int `json:"notifications"`
+	Redact        int            `json:"redact,omitempty"`
+	StateDefault  int            `json:"state_default,omitempty"`
+	Users         map[string]int `json:"users"`
+	UsersDefault  int            `json:"users_default,omitempty"`
+	Room          int            `json:"room,omitempty"`
 }
-
-type RespSetProfile struct{}

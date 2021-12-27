@@ -347,17 +347,15 @@ func (cli *Client) GetMembers(at, membership, notMembership, roomID string) (res
 }
 
 // GetStateEvent returns the state events for the current state of the room. See https://spec.matrix.org/v1.1/client-server-api/#get_matrixclientv3roomsroomidstate
-func (cli *Client) GetStateEvent(roomID string) (resp *Event, err error) {
+func (cli *Client) GetStateEvents(roomID string) (resp *Event, err error) {
 	urlPath := cli.BuildURL("rooms", roomID, "state")
 	err = cli.MakeRequest("GET", urlPath, nil, &resp)
 	return
 }
 
-// TODO
-// LookUpStateEvent returns the content of a state event. See https://spec.matrix.org/v1.1/client-server-api/#get_matrixclientv3roomsroomidstateeventtypestatekey
-func (cli *Client) LookUpStateEvent(eventType, roomID, stateKey string) (resp map[string]interface{}, err error) {
-	urlPath := cli.BuildURL("rooms", roomID, "state", eventType, stateKey)
-	err = cli.MakeRequest("GET", urlPath, nil, &resp)
+// PowerLevels returns the power levels content for the current state of the room. See https://spec.matrix.org/v1.1/client-server-api/#mroompower_levels
+func (cli *Client) PowerLevels(roomID string) (resp *RespPowerLevels, err error) {
+	err = cli.StateEvent(roomID, "m.room.power_levels", "", &resp)
 	return
 }
 
@@ -423,34 +421,6 @@ func (cli *Client) RedactEvent(roomID, eventID string, req *ReqRedact) (resp *Re
 func (cli *Client) CreateRoom(req *ReqCreateRoom) (resp *RespCreateRoom, err error) {
 	urlPath := cli.BuildURL("createRoom")
 	err = cli.MakeRequest("POST", urlPath, req, &resp)
-	return
-}
-
-// ResolveRoomAlias resolves a room alias to a room ID. See https://spec.matrix.org/v1.1/client-server-api/#get_matrixclientv3directoryroomroomalias
-func (cli *Client) ResolveRoomAlias(roomAlias string) (resp *RespResolveRoomAlias, err error) {
-	u := cli.BuildURL("directory", "room", roomAlias)
-	err = cli.MakeRequest("GET", u, nil, &resp)
-	return
-}
-
-// SetRoomAlias maps a room alias to a room ID. See https://spec.matrix.org/v1.1/client-server-api/#put_matrixclientv3directoryroomroomalias
-func (cli *Client) SetRoomAlias(roomAlias, roomID string) (resp *RespSetRoomAlias, err error) {
-	u := cli.BuildURL("directory", "room", roomAlias)
-	err = cli.MakeRequest("PUT", u, roomID, &resp)
-	return
-}
-
-// DeleteRoomAlias unmaps a room alias. See https://spec.matrix.org/v1.1/client-server-api/#delete_matrixclientv3directoryroomroomalias
-func (cli *Client) DeleteRoomAlias(roomAlias string) (resp *RespDeleteRoomAlias, err error) {
-	u := cli.BuildURL("directory", "room", roomAlias)
-	err = cli.MakeRequest("DELETE", u, nil, &resp)
-	return
-}
-
-// GetRoomAliases gets a list of local aliases for the given room. See https://spec.matrix.org/v1.1/client-server-api/#get_matrixclientv3roomsroomidaliases
-func (cli *Client) GetRoomAliases(roomID string) (resp *RespGetRoomAliases, err error) {
-	u := cli.BuildURL("rooms", roomID, "aliases")
-	err = cli.MakeRequest("GET", u, nil, &resp)
 	return
 }
 
@@ -568,20 +538,6 @@ func (cli *Client) SearchUsers(req *ReqSearchUsers) (resp *RespSearchUsers, err 
 	return
 }
 
-// GetProfile returns the combined profile information for this user. See https://spec.matrix.org/v1.1/client-server-api/#get_matrixclientv3profileuserid
-func (cli *Client) GetProfile(mxid string) (resp *RespGetProfile, err error) {
-	urlPath := cli.BuildURL("profile", mxid)
-	err = cli.MakeRequest("GET", urlPath, nil, &resp)
-	return
-}
-
-// GetDisplayName returns the display name of the user from the specified MXID. See https://spec.matrix.org/v1.1/client-server-api/#get_matrixclientv3profileuseriddisplayname
-func (cli *Client) GetDisplayName(mxid string) (resp *RespGetProfile, err error) {
-	urlPath := cli.BuildURL("profile", mxid, "displayname")
-	err = cli.MakeRequest("GET", urlPath, nil, &resp)
-	return
-}
-
 // SendText sends an m.room.message event into the given room with a msgtype of m.text
 // See http://matrix.org/docs/spec/client_server/r0.2.0.html#m-text
 func (cli *Client) SendText(roomID, text string) (*RespSendEvent, error) {
@@ -621,22 +577,6 @@ func (cli *Client) Login(req *ReqLogin) (resp *RespLogin, err error) {
 	return
 }
 
-// Logout the current user. See http://matrix.org/docs/spec/client_server/r0.6.0.html#post-matrix-client-r0-logout
-// This does not clear the credentials from the client instance. See ClearCredentials() instead.
-func (cli *Client) Logout() (resp *RespLogout, err error) {
-	urlPath := cli.BuildURL("logout")
-	err = cli.MakeRequest("POST", urlPath, nil, &resp)
-	return
-}
-
-// LogoutAll logs the current user out on all devices. See https://matrix.org/docs/spec/client_server/r0.6.0#post-matrix-client-r0-logout-all
-// This does not clear the credentials from the client instance. See ClearCredentails() instead.
-func (cli *Client) LogoutAll() (resp *RespLogoutAll, err error) {
-	urlPath := cli.BuildURL("logout/all")
-	err = cli.MakeRequest("POST", urlPath, nil, &resp)
-	return
-}
-
 // SendFormattedText sends an m.room.message event into the given room with a msgtype of m.text, supports a subset of HTML for formatting.
 // See https://matrix.org/docs/spec/client_server/r0.6.0#m-text
 func (cli *Client) SendFormattedText(roomID, text, formattedText string) (*RespSendEvent, error) {
@@ -671,7 +611,7 @@ func (cli *Client) InviteUserByThirdParty(roomID string, req *ReqInvite3PID) (re
 
 // StateEvent gets a single state event in a room. It will attempt to JSON unmarshal into the given "outContent" struct with
 // the HTTP response body, or return an error.
-// See http://matrix.org/docs/spec/client_server/r0.2.0.html#get-matrix-client-r0-rooms-roomid-state-eventtype-statekey
+// See https://spec.matrix.org/v1.1/client-server-api/#get_matrixclientv3roomsroomidstateeventtypestatekey
 func (cli *Client) StateEvent(roomID, eventType, stateKey string, outContent interface{}) (err error) {
 	u := cli.BuildURL("rooms", roomID, "state", eventType, stateKey)
 	err = cli.MakeRequest("GET", u, nil, outContent)
