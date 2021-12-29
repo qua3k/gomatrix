@@ -235,14 +235,16 @@ type RespSearchUsers struct {
 // RespPowerLevels is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#mroompower_levels
 type RespPowerLevels struct {
 	Ban           int            `json:"ban,omitempty"`
-	Events        map[string]int `json:"events"`
+	Events        map[string]int `json:"events,omitempty"`
 	EventsDefault int            `json:"events_default,omitempty"`
 	Invite        int            `json:"invite,omitempty"`
 	Kick          int            `json:"kick,omitempty"`
-	Notifications map[string]int `json:"notifications"`
-	Redact        int            `json:"redact,omitempty"`
-	StateDefault  int            `json:"state_default,omitempty"`
-	Users         map[string]int `json:"users"`
-	UsersDefault  int            `json:"users_default,omitempty"`
-	Room          int            `json:"room,omitempty"`
+	Notifications struct {
+		Room int `json:"room,omitempty"`
+	} `json:"notifications"`
+	Redact       int            `json:"redact,omitempty"`
+	StateDefault int            `json:"state_default,omitempty"`
+	Users        map[string]int `json:"users"`
+	UsersDefault int            `json:"users_default,omitempty"`
+	Room         int            `json:"room,omitempty"`
 }
