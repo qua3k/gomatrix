@@ -587,10 +587,9 @@ func (cli *Client) SendFormattedText(roomID, text, formattedText string) (*RespS
 // SendSticker sends an m.room.message event into the given room with a msgtype of m.sticker
 // See https://spec.matrix.org/latest/client-server-api/#msticker
 func (cli *Client) SendSticker(roomID, body, url string) (*RespSendEvent, error) {
-	return cli.SendMessageEvent(roomID, "m.room.message",
+	return cli.SendMessageEvent(roomID, "m.sticker",
 		ImageMessage{
-			MsgType: "m.sticker",
-			Body:    body,
+			Body: body,
 			Info: ImageInfo{
 				ThumbnailURL: url,
 			},
