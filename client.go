@@ -591,7 +591,10 @@ func (cli *Client) SendSticker(roomID, body, url string) (*RespSendEvent, error)
 		ImageMessage{
 			MsgType: "m.sticker",
 			Body:    body,
-			URL:     url,
+			Info: ImageInfo{
+				ThumbnailURL: url,
+			},
+			URL: url,
 		})
 }
 
