@@ -219,11 +219,13 @@ func (cli *Client) MakeRequest(method string, httpURL string, reqBody interface{
 		return err
 	}
 	if res.StatusCode == 429 {
-		dur, _ := HandleRetry(res, sleep)
+		dur, err := HandleRetry(res, sleep)
+		if err != nil {
+			return err
+		}
 		time.Sleep(dur)
 		cli.MakeRequest(method, httpURL, reqBody, resBody)
-	}
-	if res.StatusCode/100 != 2 { // not 2xx
+	} else if res.StatusCode/100 != 2 { // not 2xx
 		contents, err := ioutil.ReadAll(res.Body)
 		if err != nil {
 			return err
