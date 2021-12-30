@@ -361,6 +361,26 @@ func (cli *Client) PowerLevels(roomID string) (resp *RespPowerLevels, err error)
 	return
 }
 
+// Context returns a number of events that happened just before and after the
+// specified event. It use pagination query parameters to paginate history in
+// the room.
+// See https://spec.matrix.org/v1.1/client-server-api/#get_matrixclientv3roomsroomidcontexteventid
+func (cli *Client) Context(roomID, eventID, filter string, limit int) (resp *RespContext, err error) {
+	query := map[string]string{}
+
+	if filter != "" {
+		query["filter"] = filter
+	}
+
+	if limit != 0 {
+		query["limit"] = strconv.Itoa(limit)
+	}
+
+	urlPath := cli.BuildURLWithQuery([]string{"rooms", roomID, "context", eventID}, query)
+	err = cli.MakeRequest("GET", urlPath, nil, &resp)
+	return
+}
+
 // Messages returns a list of message and state events for a room. It uses
 // pagination query parameters to paginate history in the room.
 // See https://spec.matrix.org/v1.1/client-server-api/#get_matrixclientv3roomsroomidmessages

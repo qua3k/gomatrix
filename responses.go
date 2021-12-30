@@ -85,6 +85,16 @@ type RespJoinedMembers struct {
 	} `json:"joined"`
 }
 
+// RespContext is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#get_matrixclientv3roomsroomidcontexteventid
+type RespContext struct {
+	End          string  `json:"end"`
+	Event        Event   `json:"event"`
+	EventsAfter  []Event `json:"events_after"`
+	EventsBefore []Event `json:"events_before"`
+	Start        string  `json:"start"`
+	State        []Event `json:"state"`
+}
+
 // RespMessages is the JSON response for https://spec.matrix.org/v1.1/client-server-api/#get_matrixclientv3roomsroomidmessages
 type RespMessages struct {
 	Chunk []Event `json:"chunk"`
